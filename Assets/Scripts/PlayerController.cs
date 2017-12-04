@@ -12,9 +12,6 @@ public class PlayerController : MonoBehaviour
 
     private PlayerMotor motor;
 
-    public delegate void PlayerEvents();
-    public static event PlayerEvents onPlayerPressJump;
-
     private void Start()
     {
         motor = GetComponent<PlayerMotor>();
@@ -24,7 +21,6 @@ public class PlayerController : MonoBehaviour
     {
         movePlayerWithWASD();
         moveCamWithMouse();
-        doJumpWithSpace();
     }
 
     private void movePlayerWithWASD()
@@ -38,15 +34,6 @@ public class PlayerController : MonoBehaviour
         Vector3 _velocity = (_movHorizontal + _movVertical).normalized * speed;
 
         motor.setMovement(_velocity);
-    }
-
-    private void doJumpWithSpace()
-    {
-        if(Input.GetButtonDown("Jump"))
-        {
-            if (onPlayerPressJump != null)
-                onPlayerPressJump();
-        }
     }
 
     private void moveCamWithMouse()

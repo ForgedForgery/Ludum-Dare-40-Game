@@ -30,9 +30,15 @@ public class PlayerMotor : MonoBehaviour
     {
         performMove();
         performRotation();
+        checkForPlayerLand();
+    }
 
-        if (transform.position.y <= 1f)
+    private void checkForPlayerLand()
+    {
+        if (transform.position.y <= 0.5f)
+        {
             onPlayerLand();
+        }
     }
 
     private void performMove()
@@ -74,5 +80,4 @@ public class PlayerMotor : MonoBehaviour
     {
         onPlayerLand();
     }
-
 }

@@ -6,9 +6,9 @@ using UnityEngine;
 public class JumpSystem : MonoBehaviour
 {
     [SerializeField]
-    const int maxJumpAmount = 2;
+    private int maxJumpAmount = 2;
     [SerializeField]
-    const float maxJumpCD = 2f;
+    private float maxJumpCD = 2f;
 
     private int jumpsUsed = 0;
     private int jumpsAllowed;
@@ -21,29 +21,40 @@ public class JumpSystem : MonoBehaviour
     private void Start()
     {
         jumpsAllowed = maxJumpAmount;
-        PlayerController.onPlayerPressJump += registerJump;
         PlayerMotor.onPlayerLand += resetOneJumpOnLanding;
     }
 
     private void Update()
     {
-        if(jumpCD > 0f)
+        tickCooldown();
+        doJumpWithSpace();
+    }
+
+    private void tickCooldown()
+    {
+        if (jumpCD > 0f)
         {
             jumpCD -= Time.deltaTime;
         }
 
-        if(jumpCD <= 0f && jumpsAllowed <= maxJumpAmount)
+        if (jumpCD <= 0f && jumpsAllowed < maxJumpAmount)
         {
             jumpsAllowed++;
-            jumpCD = maxJumpCD;
-           
+            jumpCD = jumpsAllowed == maxJumpAmount ? 0f : maxJumpCD;
         }
-
 
         Debug.Log(jumpsAllowed);
     }
 
-    public void registerJump()
+    private void doJumpWithSpace()
+    {
+        if (Input.GetButtonDown("Jump"))
+        {
+            onPlayerPressJump();
+        }
+    }
+
+    public void onPlayerPressJump()
     {
         if(jumpsAllowed > 0)
         {
@@ -55,13 +66,11 @@ public class JumpSystem : MonoBehaviour
         }
     }
 
-    private void resetOneJumpOnLanding()
+    private void resetOneJumpOnLanding() // currently useless
     {
         if(!onGround)
         {
             onGround = true;
-            jumpsAllowed++;
-            
         }
     }
 
