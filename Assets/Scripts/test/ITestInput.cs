@@ -1,6 +1,6 @@
 public interface ITestInput
 {
-    private void readInput();
+    public void readInput();
     float Rotation { get; }
     float Velocity { get; }
 }
