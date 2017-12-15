@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestPlayerInput : MonoBehaviour
+public class TestPlayerController : MonoBehaviour, ITestInput
 {
     
 }
