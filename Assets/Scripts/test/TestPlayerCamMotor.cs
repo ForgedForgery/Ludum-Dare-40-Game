@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlayerMotor : MonoBehaviour
 {
     private Camera cam;
+    [SerializedField]
+    private Position attachedObjectPosition;
     
     private Vector3 camRotation = Vector3.zero;
     // TODO: add property to the above
@@ -23,6 +25,6 @@ public class PlayerMotor : MonoBehaviour
 
     private void performRotation()
     {
-        cam.transform.RotateAround(transform.position, transform.right, camRotation.x); 
+        cam.transform.RotateAround(attachedObjectPosition, transform.right, camRotation.x); 
     }
 }
