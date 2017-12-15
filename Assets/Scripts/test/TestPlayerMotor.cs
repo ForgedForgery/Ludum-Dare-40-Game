@@ -2,8 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class TestPlayerMotor
+{
+    private readonly IInput input;
+    private readonly Rigidbody rb;
+    private readonly MovementSettings settings;
+
+    public TestPlayerMotor(ITestInput input, Rigidbody rb, MovementSettings settings)
+    {
+        this.input = input;
+        this.rb = rb;
+    }
+    
+    tick()
+    {
+        performMove();
+        performRotation();
+    }
+    
+    private void performMove()
+    {
+        if (input.Velocity != Vector3.zero)
+        {
+            rb.MovePosition(rb.position + input.Velocity * Time.fixedDeltaTime);
+        }
+    }
+
+    private void performRotation()
+    {
+        rb.MoveRotation(rb.rotation * Quaternion.Euler(input.Rotation));
+        cam.transform.RotateAround(rb.transform.position, transform.right, camRotation.x); // cam rotation needs to be seperate
+    }
+}
+
 [RequireComponent(typeof(Camera), typeof(Rigidbody))]
-public class TestPlayerMotor : MonoBehaviour
+public class TestPlayerMotor2 : MonoBehaviour
 {
     private Rigidbody rb;
     private Camera cam;
