@@ -5,22 +5,23 @@ using UnityEngine;
 public class UnitMotor
 {
     private readonly IUnitInput input;
+    private readonly JumpSystem jumpSystem;
     private readonly Rigidbody rb;
     private readonly UnitSettings settings;
 
-    public UnitMotor(IUnitInput input, UnitEvents events, Rigidbody rb, UnitSettings settings)
+    public UnitMotor(IUnitInput input, JumpSystem jumpSystem, Rigidbody rb, UnitSettings settings)
     {
         this.input = input;
+        this.jumpSystem = jumpSystem;
         this.rb = rb;
         this.settings = settings;
-
-        events.onPlayerJump += jumpUp;
     }
     
     public void tick()
     {
         performMove();
         performRotation();
+        performJump();
     }
     
     private void performMove()
@@ -40,9 +41,12 @@ public class UnitMotor
         rb.MoveRotation(rb.rotation * Quaternion.Euler(rotation));
     }
 
-    public void jumpUp()
+    private void performJump()
     {
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        rb.AddForce(rb.transform.up * settings.JumpForce, ForceMode.Impulse);
+        if (input.Jump && jumpSystem.Ready) {
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            rb.AddForce(rb.transform.up * settings.JumpForce, ForceMode.Impulse);
+            jumpSystem.doLogicWhenJumped();
+        }
     }
 }

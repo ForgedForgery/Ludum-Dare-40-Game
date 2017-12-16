@@ -7,7 +7,7 @@ public class PlayerController : IUnitInput, ICamInput
     public float ForwardMove { get; private set; }
     public float SideMove { get; private set; }
     public float SideRotation { get; private set; }
-    public bool Jumping { get; private set; }
+    public bool Jump { get; private set; }
 
     public float yCamRotation { get; private set; }
 
@@ -19,6 +19,6 @@ public class PlayerController : IUnitInput, ICamInput
         SideRotation = Input.GetAxisRaw("Mouse X");
         yCamRotation = Input.GetAxisRaw("Mouse Y");
 
-        Jumping = Input.GetButtonDown("Jump");
+        Jump = Input.GetButtonDown("Jump");
     }
 }

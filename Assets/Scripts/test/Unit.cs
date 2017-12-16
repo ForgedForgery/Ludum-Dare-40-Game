@@ -16,13 +16,16 @@ public class Unit : MonoBehaviour
     private ICamInput playerCamInput;
     private PlayerCamMotor camMotor;
 
-    private UnitEvents events;
+    private JumpSystem jumpSystem;
+
+    // add new attacksystem here
 
     private void Start()
     {
         playerInput = unitSettings.IsPlayer ? new PlayerController() as IUnitInput: new SlimeController();
-        events = new UnitEvents(playerInput, GetComponent<Transform>());
-        motor = new UnitMotor(playerInput, events, GetComponent<Rigidbody>(), unitSettings);
+
+        jumpSystem = new JumpSystem();
+        motor = new UnitMotor(playerInput, jumpSystem, GetComponent<Rigidbody>(), unitSettings);
 
         if (cam != null)
         {
@@ -36,7 +39,7 @@ public class Unit : MonoBehaviour
         playerInput.readInput();
         if (cam != null)
             playerCamInput.readInput();
-        events.tick();
+        jumpSystem.tick();
     }
 
     private void FixedUpdate()

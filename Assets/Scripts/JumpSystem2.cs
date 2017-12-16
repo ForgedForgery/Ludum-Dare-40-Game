@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class JumpSystem : MonoBehaviour
+public class JumpSystem2 : MonoBehaviour
 {
     [SerializeField]
     private int maxJumpAmount = 2;

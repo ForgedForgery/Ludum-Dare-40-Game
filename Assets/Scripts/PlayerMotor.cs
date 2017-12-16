@@ -23,7 +23,7 @@ public class PlayerMotor : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        JumpSystem.onJump += thrustUp;
+        JumpSystem2.onJump += thrustUp;
     }
 
     private void FixedUpdate()
