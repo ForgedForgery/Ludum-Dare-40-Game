@@ -1,37 +1,41 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class JumpSystem
-{
+{ 
 
-    // Could split the jumping:
-    //    - add one normal jump that gets consumed and resets only when you are on the ground
-    //    - add multi jumps that or "air" jumps that get consumed while in the air and have CD
+    // TODO: fix airJumps and test if ground jumps work properly
 
+    private bool groundJump = true;
+    public bool OnGround { get; set; }
 
-    [SerializeField]
-    private int maxJumps = 2;
-    [SerializeField]
-    private float maxCD = 2f;
-
-    private int jumpCharges;
+    private int airJumps;
+    private int maxAirJumps;
     private float cooldown = 0f;
+    private float maxCD = 2f;
 
     private int jumpsUsed = 0; // just keeps track, otherwise useless
 
     private bool ready = true;
     public bool Ready { get { return ready; } }
 
-    public JumpSystem()
+    public JumpSystem(UnitSettings settings)
     {
-        jumpCharges = maxJumps;
+        maxAirJumps = settings.MaxAirJumps;
+        airJumps = maxAirJumps;
     }
 
     public void tick()
     {
         tickCooldown();
-        ready = jumpCharges > 0 ? true : false;
+
+        if (OnGround)
+            groundJump = true;
+
+        ready = airJumps > 0 || groundJump ? true : false;
+        Debug.Log(ready + " " + OnGround);
     }
 
     private void tickCooldown()
@@ -42,21 +46,23 @@ public class JumpSystem
         }
 
         // can be cleaner
-        if (cooldown <= 0f && jumpCharges < maxJumps)
+        if (cooldown <= 0f && airJumps < maxAirJumps)
         {
-            jumpCharges++;
-            cooldown = jumpCharges == maxJumps ? 0f : maxCD;
+            airJumps++;
+            cooldown = airJumps == maxAirJumps ? 0f : maxCD;
         }
-
-        Debug.Log(jumpCharges);
     }
 
     public void doLogicWhenJumped()
     {
-        if (jumpCharges > 0)
+        if (OnGround)
+        {
+            groundJump = false;
+        }
+        else if (airJumps > 0)
         {
             jumpsUsed++;
-            jumpCharges--;
+            airJumps--;
             cooldown = cooldown > 0f ? cooldown : maxCD;
         }
     }

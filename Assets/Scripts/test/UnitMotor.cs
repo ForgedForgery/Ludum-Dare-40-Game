@@ -17,13 +17,19 @@ public class UnitMotor
         this.settings = settings;
     }
     
-    public void tick()
+    public void tickFixed()
     {
         performMove();
         performRotation();
-        performJump();
+        if (input.Jump && jumpSystem.Ready)
+            performJump();
     }
-    
+
+    public void tick()
+    {
+        checkIfOnGround();
+    }
+
     private void performMove()
     {
         Vector3 sideVector = rb.transform.right * input.SideMove;
@@ -43,10 +49,17 @@ public class UnitMotor
 
     private void performJump()
     {
-        if (input.Jump && jumpSystem.Ready) {
-            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-            rb.AddForce(rb.transform.up * settings.JumpForce, ForceMode.Impulse);
-            jumpSystem.doLogicWhenJumped();
-        }
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.AddForce(rb.transform.up * settings.JumpForce, ForceMode.Impulse);
+        jumpSystem.doLogicWhenJumped();
     }
+
+    private void checkIfOnGround()
+    {
+        if (rb.transform.position.y <= 0.5f)
+            jumpSystem.OnGround = true;
+        else
+            jumpSystem.OnGround = false;
+    }
+
 }

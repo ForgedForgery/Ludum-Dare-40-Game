@@ -17,7 +17,7 @@ public class PlayerCamMotor
         this.settings = settings;
     }
 
-    public void tick()
+    public void tickFixed()
     {
         performRotation();
     }

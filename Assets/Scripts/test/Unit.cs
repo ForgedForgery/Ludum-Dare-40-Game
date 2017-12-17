@@ -24,7 +24,7 @@ public class Unit : MonoBehaviour
     {
         playerInput = unitSettings.IsPlayer ? new PlayerController() as IUnitInput: new SlimeController();
 
-        jumpSystem = new JumpSystem();
+        jumpSystem = new JumpSystem(unitSettings);
         motor = new UnitMotor(playerInput, jumpSystem, GetComponent<Rigidbody>(), unitSettings);
 
         if (cam != null)
@@ -39,13 +39,14 @@ public class Unit : MonoBehaviour
         playerInput.readInput();
         if (cam != null)
             playerCamInput.readInput();
+        motor.tick();
         jumpSystem.tick();
     }
 
     private void FixedUpdate()
     {
-        motor.tick();
+        motor.tickFixed();
         if (cam != null)
-            camMotor.tick();
+            camMotor.tickFixed();
     }
 }
