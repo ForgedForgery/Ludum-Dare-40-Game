@@ -10,10 +10,10 @@ public class Unit : MonoBehaviour
     [SerializeField]
     private UnitSettings unitSettings;
 
-    private IUnitInput playerInput;
+    private IUnitInput unitInput;
     private UnitMotor motor;
 
-    private ICamInput playerCamInput;
+    private ICamInput camInput;
     private PlayerCamMotor camMotor;
 
     private JumpSystem jumpSystem;
@@ -22,23 +22,24 @@ public class Unit : MonoBehaviour
 
     private void Start()
     {
-        playerInput = unitSettings.IsPlayer ? new PlayerController() as IUnitInput: new SlimeController();
+        unitInput = unitSettings.IsPlayer ? new PlayerController() as IUnitInput: new SlimeController();
 
         jumpSystem = new JumpSystem(unitSettings);
-        motor = new UnitMotor(playerInput, jumpSystem, GetComponent<Rigidbody>(), unitSettings);
+        motor = new UnitMotor(unitInput, jumpSystem, GetComponent<Rigidbody>(), unitSettings);
 
         if (cam != null)
         {
-            playerCamInput = new PlayerController();
-            camMotor = new PlayerCamMotor(playerCamInput, GetComponent<Transform>(), cam, unitSettings);
+            camInput = new PlayerController();
+            camMotor = new PlayerCamMotor(camInput, GetComponent<Transform>(), cam, unitSettings);
         }
     }
     
     private void Update()
     {
-        playerInput.readInput();
+        unitInput.readInput();
         if (cam != null)
-            playerCamInput.readInput();
+            camInput.readInput();
+
         motor.tick();
         jumpSystem.tick();
     }
@@ -48,5 +49,10 @@ public class Unit : MonoBehaviour
         motor.tickFixed();
         if (cam != null)
             camMotor.tickFixed();
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        
     }
 }
