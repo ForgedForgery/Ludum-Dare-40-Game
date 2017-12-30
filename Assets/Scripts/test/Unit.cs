@@ -22,9 +22,10 @@ public class Unit : MonoBehaviour
 
     private void Start()
     {
-        unitInput = unitSettings.IsPlayer ? new PlayerController() as IUnitInput: new SlimeController();
+        unitInput = unitSettings.IsPlayer ? new PlayerController() as IUnitInput : new SlimeController();
 
         jumpSystem = new JumpSystem(unitSettings);
+
         motor = new UnitMotor(unitInput, jumpSystem, GetComponent<Rigidbody>(), unitSettings);
 
         if (cam != null)

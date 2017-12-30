@@ -5,58 +5,65 @@ using UnityEngine;
 
 public class JumpSystem
 { 
-    private bool groundJump = true;
-    public bool OnGround { get; set; }
+    public bool Grounded { get; set; }
 
-    private int airJumps;
+    private int airJumpsAvailable;
     private int maxAirJumps;
-    private float cooldown = 0f;
-    private float maxCD = 2f;
 
-    private int jumpsUsed = 0; // just keeps track, otherwise useless
+    private float cooldown = 0f;
+    private float maxCD;
 
     private bool ready = true;
     public bool Ready { get { return ready; } }
 
-    public JumpSystem(UnitSettings settings)
+    private UnitSettings settings;
+
+    private int jumpsUsed = 0; // just keeps track, otherwise useless
+
+    public JumpSystem (UnitSettings _settings)
+    {
+        settings = _settings;
+        airJumpsAvailable = settings.MaxAirJumps;
+    }
+
+    public void tick ()
+    {
+        updateSettings();
+        tickCooldown ();
+
+        ready = airJumpsAvailable > 0 || Grounded;
+    }
+
+    private void updateSettings()
     {
         maxAirJumps = settings.MaxAirJumps;
-        airJumps = maxAirJumps;
+        maxCD = settings.MaxCD;
     }
 
-    public void tick()
-    {
-        tickCooldown();
-
-        if (OnGround)
-            groundJump = true;
-
-        ready = airJumps > 0 || groundJump ? true : false;
-    }
-
-    private void tickCooldown()
+    private void tickCooldown ()
     {
         if (cooldown > 0f)
         {
             cooldown -= Time.deltaTime;
         }
-        else if (airJumps < maxAirJumps)
+        else if (airJumpsAvailable < maxAirJumps)
         {
-            airJumps++;
-            cooldown = airJumps == maxAirJumps ? 0f : maxCD;
+            airJumpsAvailable++;
+
+            if (airJumpsAvailable == maxAirJumps)
+                cooldown = 0f;
+            else
+                cooldown = maxCD;
         }
     }
 
-    public void usedJump()
+    public void usedJump ()
     {
-        if (OnGround)
+        jumpsUsed++;
+
+        if (!Grounded)
         {
-            groundJump = false;
-        }
-        else
-        {
-            jumpsUsed++;
-            airJumps--;
+            airJumpsAvailable--;
             cooldown = cooldown > 0f ? cooldown : maxCD;
         }
     }
