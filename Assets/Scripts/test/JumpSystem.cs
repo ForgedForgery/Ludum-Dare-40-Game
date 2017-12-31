@@ -7,11 +7,12 @@ public class JumpSystem
 { 
     public bool Grounded { get; set; }
 
-    private int airJumpsAvailable;
+    private int airJumpsLeft;
     private int maxAirJumps;
 
-    private float cooldown = 0f;
-    private float maxCD;
+    // maybe make a Cooldown class to make the code easier to read
+    private float cooldownLeft = 0f;
+    private float maxCooldown;
 
     private bool ready = true;
     public bool Ready { get { return ready; } }
@@ -23,7 +24,7 @@ public class JumpSystem
     public JumpSystem (UnitSettings _settings)
     {
         settings = _settings;
-        airJumpsAvailable = settings.MaxAirJumps;
+        airJumpsLeft = settings.MaxAirJumps;
     }
 
     public void tick ()
@@ -31,29 +32,29 @@ public class JumpSystem
         updateSettings();
         tickCooldown ();
 
-        ready = airJumpsAvailable > 0 || Grounded;
+        ready = airJumpsLeft > 0 || Grounded;
     }
 
     private void updateSettings()
     {
         maxAirJumps = settings.MaxAirJumps;
-        maxCD = settings.MaxCD;
+        maxCooldown = settings.MaxCD;
     }
 
     private void tickCooldown ()
     {
-        if (cooldown > 0f)
+        bool cooldownIsTicking = cooldownLeft > 0f;
+        if (cooldownIsTicking)
         {
-            cooldown -= Time.deltaTime;
+            cooldownLeft -= Time.deltaTime;
         }
-        else if (airJumpsAvailable < maxAirJumps)
+        else if (airJumpsLeft < maxAirJumps)
         {
-            airJumpsAvailable++;
+            airJumpsLeft++;
 
-            if (airJumpsAvailable == maxAirJumps)
-                cooldown = 0f;
-            else
-                cooldown = maxCD;
+            cooldownLeft = maxCooldown;
+            if (airJumpsLeft == maxAirJumps)
+                cooldownLeft = 0f;
         }
     }
 
@@ -63,8 +64,10 @@ public class JumpSystem
 
         if (!Grounded)
         {
-            airJumpsAvailable--;
-            cooldown = cooldown > 0f ? cooldown : maxCD;
+            airJumpsLeft--;
+
+            bool cooldownIsTicking = cooldownLeft > 0f;
+            cooldownLeft = cooldownIsTicking ? cooldownLeft : maxCooldown;
         }
     }
 }
