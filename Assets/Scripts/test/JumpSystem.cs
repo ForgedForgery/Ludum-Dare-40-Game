@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class JumpSystem
 { 
-    public bool Grounded { get; set; }
 
     private int airJumpsLeft;
     private int maxAirJumps;
 
+    // TODO:
     // maybe make a Cooldown class to make the code easier to read
     private float cooldownLeft = 0f;
     private float maxCooldown;
@@ -19,8 +19,6 @@ public class JumpSystem
 
     private UnitSettings settings;
 
-    private int jumpsUsed = 0; // just keeps track, otherwise useless
-
     public JumpSystem (UnitSettings _settings)
     {
         settings = _settings;
@@ -29,13 +27,11 @@ public class JumpSystem
 
     public void tick ()
     {
-        updateSettings();
+        updateSettings ();
         tickCooldown ();
-
-        ready = airJumpsLeft > 0 || Grounded;
     }
 
-    private void updateSettings()
+    private void updateSettings ()
     {
         maxAirJumps = settings.MaxAirJumps;
         maxCooldown = settings.MaxCD;
@@ -58,16 +54,16 @@ public class JumpSystem
         }
     }
 
-    public void usedJump ()
+    public void checkIfReady (bool isGrounded)
     {
-        jumpsUsed++;
+        ready = airJumpsLeft > 0 || isGrounded;
+    }
 
-        if (!Grounded)
-        {
-            airJumpsLeft--;
+    public void usedJumpInAir ()
+    {
+        airJumpsLeft--;
 
-            bool cooldownIsTicking = cooldownLeft > 0f;
-            cooldownLeft = cooldownIsTicking ? cooldownLeft : maxCooldown;
-        }
+        bool cooldownIsTicking = cooldownLeft > 0f;
+        cooldownLeft = cooldownIsTicking ? cooldownLeft : maxCooldown;
     }
 }

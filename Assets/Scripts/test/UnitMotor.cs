@@ -8,44 +8,28 @@ using UnityEngine;
 public class UnitMotor
 {
     private readonly IUnitInput input;
-    private readonly JumpSystem jumpSystem;
+    private readonly UnitState state;
     private readonly Rigidbody rb;
     private readonly UnitSettings settings;
 
-    private bool jumping = false;
-
-    public UnitMotor(IUnitInput input, JumpSystem jumpSystem, Rigidbody rb, UnitSettings settings)
+    public UnitMotor(IUnitInput input, UnitState state, Rigidbody rb, UnitSettings settings)
     {
         this.input = input;
-        this.jumpSystem = jumpSystem;
+        this.state = state;
         this.rb = rb;
         this.settings = settings;
     }
     
     public void tick()
     {
-        checkIfOnGround();
-        checkIfJumped();
-    }
 
-    // needs to be different
-    // should check for collission with ground or something similar
-    private void checkIfOnGround()
-    {
-        jumpSystem.Grounded = rb.transform.position.y <= 0.51f;
-    }
-
-    private void checkIfJumped()
-    {
-        if (input.Jump && jumpSystem.Ready)
-            jumping = true;
     }
 
     public void tickFixed()
     {
         performMove();
         performRotation();
-        if (jumping)
+        if (state.Jumping)
             performJump();
     }
 
@@ -71,7 +55,6 @@ public class UnitMotor
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(rb.transform.up * settings.JumpForce, ForceMode.Impulse);
 
-        jumping = false;
-        jumpSystem.usedJump();
+        state.usedJump();
     }
 }

@@ -18,15 +18,20 @@ public class Unit : MonoBehaviour
 
     private JumpSystem jumpSystem;
 
-    // add new attacksystem here
+    private UnitState state;
+
+    // TODO: add new attacksystem
 
     private void Start()
     {
-        unitInput = unitSettings.IsPlayer ? new PlayerController() as IUnitInput : new SlimeController();
+        Rigidbody rb = GetComponent<Rigidbody>();
 
+        unitInput = unitSettings.IsPlayer ? new PlayerController() as IUnitInput : new SlimeController();
         jumpSystem = new JumpSystem(unitSettings);
 
-        motor = new UnitMotor(unitInput, jumpSystem, GetComponent<Rigidbody>(), unitSettings);
+        state = new UnitState(rb, unitInput, jumpSystem);
+
+        motor = new UnitMotor(unitInput, state, rb, unitSettings);
 
         if (cam != null)
         {
@@ -41,7 +46,7 @@ public class Unit : MonoBehaviour
         if (cam != null)
             camInput.readInput();
 
-        motor.tick();
+        state.tick();
         jumpSystem.tick();
     }
 
