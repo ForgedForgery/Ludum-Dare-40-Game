@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Unit/Settings", fileName = "UnitData")]
-public class UnitSettings : ScriptableObject
+public class UnitSettings : ScriptableObject, IJumpSettings
 {
 
     [SerializeField]
@@ -23,4 +23,10 @@ public class UnitSettings : ScriptableObject
     public int MaxAirJumps { get { return maxAirJumps; } }
     public float MaxCD { get { return maxCD; } }
     public bool IsPlayer { get { return isPlayer; } }
+}
+
+public interface IJumpSettings
+{
+    float MaxCD { get; }
+    int MaxAirJumps { get; }
 }

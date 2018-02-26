@@ -14,21 +14,21 @@ public class JumpSystem
     private float cooldownLeft = 0f;
     private float maxCooldown;
 
-    private bool ready = true;
-    public bool Ready { get { return ready; } }
+    public bool ready = true;
 
-    private UnitSettings settings;
+    private IJumpSettings settings;
 
-    public JumpSystem (UnitSettings _settings)
+    public JumpSystem (IJumpSettings _settings)
     {
         settings = _settings;
         airJumpsLeft = settings.MaxAirJumps;
     }
 
-    public void tick ()
+    public void Tick ()
     {
         updateSettings ();
         tickCooldown ();
+        checkIfReady ();
     }
 
     private void updateSettings ()
@@ -54,9 +54,9 @@ public class JumpSystem
         }
     }
 
-    public void checkIfReady (bool isGrounded)
+    private void checkIfReady ()
     {
-        ready = airJumpsLeft > 0 || isGrounded;
+        ready = airJumpsLeft > 0;
     }
 
     public void usedJumpInAir ()

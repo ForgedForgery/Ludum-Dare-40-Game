@@ -628,11 +628,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1051020135}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 237d1404b1d4cc24997e61dc5c38093a, type: 3}
+  m_Script: {fileID: 11500000, guid: b10b6f74ffc12c7448e3c9a740dd1643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 1566707322}
-  unitSettings: {fileID: 11400000, guid: 1ed88e0eeaabb194eb1af6f1c89c30bb, type: 2}
+  settings: {fileID: 11400000, guid: 1ed88e0eeaabb194eb1af6f1c89c30bb, type: 2}
 --- !u!54 &1051020138
 Rigidbody:
   m_ObjectHideFlags: 0

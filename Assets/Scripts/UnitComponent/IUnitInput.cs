@@ -10,7 +10,7 @@ public interface IUnitInput
 
 public interface ICamInput
 {
-    float yCamRotation { get; }
+    float HorizontalCamRotation { get; }
 
     void readInput();
 }
